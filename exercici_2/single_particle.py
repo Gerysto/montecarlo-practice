@@ -160,8 +160,26 @@ class SingleParticleInHarmonicTrap:
 
 
 
+    def average_energy_direct_estimator_with_errors(self, N):
+        factor = -self.H_BAR**2 / (2*self.mass)
+
+        def local_energy(x):
+            kinetic = factor * self.local_kinetic_energy(x)
+            potential = self.potential_energy(x)
+            return kinetic + potential
+
+        return self.average_observable(local_energy, N)
 
 
+    def average_energy_drift_force_with_errors(self, N):
+        factor = self.H_BAR**2 / (2*self.mass)
+
+        def local_energy(x):
+            kinetic = factor * self.drift_force(x)**2
+            potential = self.potential_energy(x)
+            return kinetic + potential
+
+        return self.average_observable(local_energy, N)
 
 
     def blocking_estimate(self, samples) -> tuple[float, float]:
